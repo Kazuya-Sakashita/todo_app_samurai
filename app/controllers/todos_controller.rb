@@ -1,35 +1,30 @@
 class TodosController < ApplicationController
-  before_action :set_todo, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
+  before_action :set_goal
+  before_action :set_todo, only: [:show, :edit, :update, :destroy, :sort]
 
-  # GET /todos or /todos.json
-  def index
-    @todos = Todo.all
-  end
-
-  # GET /todos/1 or /todos/1.json
-  def show
-  end
 
   # GET /todos/new
   def new
-    @todo = Todo.new
+ #@goalに紐付いたtodosをnewしています
+    @todo = @goal.todos.new
   end
 
   # GET /todos/1/edit
   def edit
   end
 
+  def sort
+  end
+
   # POST /todos or /todos.json
   def create
-    @todo = Todo.new(todo_params)
+    @todo = @goal.todos.new(todo_params)
 
-    respond_to do |format|
       if @todo.save
-        format.html { redirect_to todo_url(@todo), notice: "Todo was successfully created." }
-        format.json { render :show, status: :created, location: @todo }
+         @status = true
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @todo.errors, status: :unprocessable_entity }
+         @status = false
       end
     end
   end
@@ -38,11 +33,9 @@ class TodosController < ApplicationController
   def update
     respond_to do |format|
       if @todo.update(todo_params)
-        format.html { redirect_to todo_url(@todo), notice: "Todo was successfully updated." }
-        format.json { render :show, status: :ok, location: @todo }
+         @status = true
       else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @todo.errors, status: :unprocessable_entity }
+         @status = false
       end
     end
   end
@@ -50,17 +43,19 @@ class TodosController < ApplicationController
   # DELETE /todos/1 or /todos/1.json
   def destroy
     @todo.destroy
-
-    respond_to do |format|
-      format.html { redirect_to todos_url, notice: "Todo was successfully destroyed." }
-      format.json { head :no_content }
     end
   end
 
   private
+
+    def set_goal
+    @goal = current_user.goals.find_by(id: params[:goal_id])
+    redirect_to(goals_url, alert: "ERROR!!") if @goal.blank?
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_todo
-      @todo = Todo.find(params[:id])
+      @todo = @goal.todos.find_by(id: params[:id])
     end
 
     # Only allow a list of trusted parameters through.
