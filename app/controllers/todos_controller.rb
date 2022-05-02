@@ -26,24 +26,20 @@ class TodosController < ApplicationController
       else
          @status = false
       end
-    end
   end
 
   # PATCH/PUT /todos/1 or /todos/1.json
   def update
-    respond_to do |format|
       if @todo.update(todo_params)
          @status = true
       else
          @status = false
       end
-    end
   end
 
   # DELETE /todos/1 or /todos/1.json
   def destroy
     @todo.destroy
-    end
   end
 
   private

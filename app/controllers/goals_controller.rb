@@ -25,24 +25,24 @@ class GoalsController < ApplicationController
   def create
     @goal = current_user.goals.new(goal_params)
 
-    respond_to do |format|
+
       if @goal.save
          @status = true
       else
          @status = false
       end
-    end
+
   end
 
   # PATCH/PUT /goals/1 or /goals/1.json
   def update
-    respond_to do |format|
+
       if @goal.update(goal_params)
          @status = true
       else
          @status = false
       end
-    end
+
   end
 
   # DELETE /goals/1 or /goals/1.json

@@ -71,3 +71,7 @@ gem 'devise', '~> 4.2'
 
 # manage sort order
 gem 'acts_as_list', '~> 1.0', '>= 1.0.4'
+
+
+
+gem 'webpacker', '~> 5.0'
